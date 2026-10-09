@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Leave Management</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f7fb;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background: #172554;
+            color: white;
+            padding: 25px 18px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #dbeafe;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .stat-card {
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .table-card {
+            border: none;
+            border-radius: 14px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+
+        <aside class="col-md-2 sidebar">
+            <h4 class="mb-4">LeaveManager</h4>
+
+            <a href="/" class="active">Dashboard</a>
+            <a href="/employees/">Employees</a>
+            <a href="/leaves/">Leave Requests</a>
+            <a href="/admin/">Admin Panel</a>
+        </aside>
+
+        <main class="col-md-10 main-content">
+
+            <div class="mb-4">
+                <h2>Dashboard</h2>
+                <p class="text-secondary">
+                    Overview of employee leave activity
+                </p>
+            </div>
+
+            <div class="row g-3 mb-4">
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="card stat-card p-3">
+                        <p class="text-secondary mb-1">Total Employees</p>
+                        <div class="stat-number text-primary">
+                            {{ total_employees }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="card stat-card p-3">
+                        <p class="text-secondary mb-1">Total Leave Requests</p>
+                        <div class="stat-number">
+                            {{ total_leaves }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="card stat-card p-3">
+                        <p class="text-secondary mb-1">Pending Requests</p>
+                        <div class="stat-number text-warning">
+                            {{ pending_leaves }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="card stat-card p-3">
+                        <p class="text-secondary mb-1">Approved Requests</p>
+                        <div class="stat-number text-success">
+                            {{ approved_leaves }}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card table-card shadow-sm">
+                <div class="card-body p-4">
+
+                    <h5 class="mb-3">Recent Leave Requests</h5>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Leave Type</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for leave in recent_leaves %}
+                                <tr>
+                                    <td>{{ leave.employee.name }}</td>
+                                    <td>{{ leave.get_leave_type_display }}</td>
+                                    <td>{{ leave.start_date }}</td>
+                                    <td>{{ leave.end_date }}</td>
+                                    <td>
+                                        {% if leave.status == 'Approved' %}
+                                            <span class="badge bg-success">Approved</span>
+                                        {% elif leave.status == 'Rejected' %}
+                                            <span class="badge bg-danger">Rejected</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-secondary">
+                                        No leave requests yet. Add some through the Admin Panel.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+</body>
+</html>
